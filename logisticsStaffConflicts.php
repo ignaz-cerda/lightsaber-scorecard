@@ -1,0 +1,380 @@
+<?php
+/*******************************************************************************
+	Logistics Staff Assigments
+
+*******************************************************************************/
+
+// INITIALIZATION //////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+$pageName = 'Logistics Staff Conflicts';
+$includeTournamentName = false;
+$hideEventNav = true;
+$jsIncludes[] = 'logistics_management_scripts.js';
+include('includes/header.php');
+
+
+if($_SESSION['eventID'] == null){
+	pageError('event');
+} elseif(ALLOW['EVENT_MANAGEMENT'] == false && ALLOW['VIEW_SETTINGS'] == false) {
+	pageError('user');
+} elseif(logistics_isTournamentScheduleUsed($_SESSION['eventID']) == false){
+	displayAlert("A schedule has not been created for this event.");
+} elseif($_SESSION['isMetaEvent'] == true){
+	redirect('infoSummary.php');
+} else {
+
+
+
+	$eventRoster = getEventRoster();
+	$eventDays = getEventDays($_SESSION['eventID']);
+
+	$conflictList = generateConflictList($eventRoster);
+	$unfilledShifts = logistics_findUnfilledShifts($_SESSION['eventID']);
+	$staffOverCompetency = logistics_findStaffOverCompetency($_SESSION['eventID']);
+
+
+// PAGE DISPLAY ////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+?>
+
+<!-- Tabs -->
+	<ul class="tabs" data-tabs id="conflicts-tab">
+
+
+		<li class="tabs-title">
+			<a data-tabs-target="panel-conflicts" href="#panel-conflicts">
+				Schedule Conflicts
+			</a>
+		</li>
+
+
+		<li class="tabs-title">
+			<a data-tabs-target="panel-unstaffed" href="#panel-unstaffed">
+				Unfilled Staff Shifts
+			</a>
+		</li>
+
+		<li class="tabs-title">
+			<a data-tabs-target="panel-competency" href="#panel-competency">
+				Over-Competency Shifts
+			</a>
+		</li>
+
+	</ul>
+
+<!-- Tab Content -->
+	<div class="tabs-content" data-tabs-content="conflicts-tab">
+
+
+		<div class="tabs-panel" id="panel-conflicts">
+			<?=scheduleConflictList($conflictList, $eventDays)?>
+		</div>
+
+
+		<div class="tabs-panel" id="panel-unstaffed">
+			<?=scheduleUnfilledShifts($unfilledShifts, $eventDays)?>
+		</div>
+
+		<div class="tabs-panel" id="panel-competency">
+			<?=scheduleStaffOverCompetency($staffOverCompetency, $eventDays)?>
+		</div>
+
+	</div>
+
+
+
+
+<?php }
+include('includes/footer.php');
+
+
+// FUNCTIONS ///////////////////////////////////////////////////////////////////
+/******************************************************************************/
+
+function scheduleStaffOverCompetency($staffOverCompetency, $eventDays){
+
+	if($staffOverCompetency == null){
+		displayAlert("Everyone is within their limits.<BR>(Good job)");
+		return;
+	}
+
+?>
+
+	<table class='stack'>
+
+	<tr>
+		<th>Tournament</th>
+		<th>Day</th>
+		<th>Time</th>
+		<th>Location</th>
+		<th>Name</th>
+		<th>Role</th>
+		<th>Competency</th>
+	</tr>
+
+	<?php foreach($staffOverCompetency as $shift):
+		$sInfo = logistics_getShiftInfo($shift['shiftID']);
+		$roleName = logistics_getRoleName($shift['logisticsRoleID']);
+		if($sInfo['tournamentID'] != null){
+			$tournamentName = getTournamentName($sInfo['tournamentID']);
+		} else {
+			$tournamentName = "";
+		}
+		?>
+
+			<tr>
+				<td><?=$tournamentName?></td>
+				<td>
+					Day <?=$sInfo['dayNum']?> (<?=$eventDays[$sInfo['dayNum']]?>)
+				</td>
+				<td><?=min2hr($sInfo['startTime'])?> - <?=min2hr($sInfo['endTime'])?></td>
+				<td><?=logistics_getLocationName($sInfo['locationID'])?></td>
+				<td><strong><?=getFighterName($shift['rosterID'])?></strong></td>
+				<td><?=$roleName?></td>
+				<td><?=$shift['staffCompetency']?> / <?=$shift['roleCompetency']?></td>
+			</tr>
+
+	<?php endforeach ?>
+
+	</table>
+
+
+<?php
+}
+
+/******************************************************************************/
+
+function scheduleUnfilledShifts($badShifts, $eventDays){
+
+	echo "<p><b>Note:</b> Shifts flagged with the 'Suppress Conflicts' option are not examined for unfilled templates.</p>";
+
+	if($badShifts == null){
+		displayAlert("All shifts match their template.<BR>(Good job)");
+		return;
+	}
+?>
+
+	<table class='stack'>
+
+	<tr>
+		<th>Tournament</th>
+		<th>Day</th>
+		<th>Time</th>
+		<th>Location</th>
+		<th>Role</th>
+		<th># of Staff</th>
+	</tr>
+
+	<?php foreach($badShifts as $shiftID => $shift):
+
+
+		$sInfo = logistics_getShiftInfo($shiftID);
+		foreach($shift as $staffType):
+			$roleName = logistics_getRoleName($staffType['logisticsRoleID']);
+			?>
+
+			<tr>
+				<td><?=getTournamentName($sInfo['tournamentID'])?></td>
+				<td>
+					Day <?=$sInfo['dayNum']?> (<?=$eventDays[$sInfo['dayNum']]?>)
+				</td>
+				<td><?=min2hr($sInfo['startTime'])?> - <?=min2hr($sInfo['endTime'])?></td>
+				<td><?=logistics_getLocationName($sInfo['locationID'])?></td>
+				<td><?=$roleName?></td>
+				<td><?=$staffType['numStaff']?> / <?=$staffType['targetStaff']?></td>
+			</tr>
+
+		<?php endforeach ?>
+	<?php endforeach ?>
+
+	</table>
+
+
+<?php
+}
+
+/******************************************************************************/
+
+function scheduleConflictList($conflictList, $eventDays){
+
+	if($conflictList == null){
+		displayAlert("No staffing conflicts.<BR>(Good job)");
+		return;
+	}
+	$i = -1;
+
+
+?>
+	<form method="POST">
+
+	<table class='stack'>
+
+
+	<?php foreach($conflictList as $rosterID => $conflicts): ?>
+		<?php foreach($conflicts as $conflict):
+			$info[1] = logistics_getScheduleItemDescription($conflict[1]['blockID'],$conflict[1]['shiftID']);
+			$info[2] = logistics_getScheduleItemDescription($conflict[2]['blockID'],$conflict[2]['shiftID']);
+
+			if($i % 2 == 0){
+				$color = 'white';
+			} else {
+				$color = '#EAF3FB';
+			}
+
+			$bothTournaments = true;
+			if($conflict[1]['shiftID'] != null){
+				$info[1]['type'] = "<b>Staffing</b><BR><i style='font-size:0.85em'>".logistics_getRoleName($conflict[1]['roleID'])."</i>";
+
+				$bothTournaments = false;
+			} else {
+				$info[1]['type'] = "<b>Tournament</b>";
+			}
+
+			if($conflict[2]['shiftID'] != null){
+				$info[2]['type'] = "<b>Staffing</b><BR><i style='font-size:0.85em'>".logistics_getRoleName($conflict[2]['roleID'])."</i>";
+				$bothTournaments = false;
+			} else {
+				$info[2]['type'] = "<b>Tournament<b>";
+			}
+
+			if($bothTournaments == true){
+				$suppressed = isConflictSuppressed($rosterID, $conflict[1]['tournamentID'], $conflict[2]['tournamentID']);
+
+				if($suppressed == true){
+					continue;
+				}
+			}
+
+			$location[1] = logistics_getLocationName($info[1]['locationID']);
+			$location[2] = logistics_getLocationName($info[2]['locationID']);
+
+			if(strlen($location[2]) > 7){
+				$location[2] = "<span style='font-size:0.8em'>{$location[2]}</span>";
+			}
+
+			$i++;
+
+			?>
+			<tr style='border-top: 1px solid black; background-color: <?=$color?>;'>
+
+				<input type='hidden' name='suppressConflict[<?=$i?>][rosterID]' value='<?=$rosterID?>'>
+				<input type='hidden' name='suppressConflict[<?=$i?>][tournamentID1]' value='<?=$conflict[1]['tournamentID']?>'>
+				<input type='hidden' name='suppressConflict[<?=$i?>][tournamentID2]' value='<?=$conflict[2]['tournamentID']?>'>
+				<input type='hidden' name='suppressConflict[<?=$i?>][suppressConflict]' value='0'>
+
+				<td rowspan='2' style=' padding-bottom:3px;  padding-top:3px;'>
+					<h5><?=getFighterName($rosterID)?></h5>
+				</td>
+				<td rowspan='2' style=' padding-bottom:3px;  padding-top:3px;'>
+
+						Day <?=$conflict[1]['dayNum']?>
+						<BR>
+					<strong>
+						<?=$eventDays[$conflict[1]['dayNum']]?>
+					</strong>
+				</td>
+				<td style=' padding-bottom:1px; padding-top:3px;'>
+					<?=$info[1]['type']?>
+				</td>
+				<td style=' padding-bottom:1px; padding-top:3px;'>
+					<?=logistics_getScheduleBlockName($conflict[1]['blockID'])?>
+				</td>
+				<td style=' padding-bottom:1px; padding-top:3px;'>
+					<?=min2hr($info[1]['startTime'], false,true)?> - <?=min2hr($info[1]['endTime'], false,true)?>
+				</td>
+				<td>
+					<?=$location[1]?>
+				</td>
+				<?php if($bothTournaments == true): ?>
+					<td rowspan='2'>
+						<input type='checkbox' class='no-bottom' name='suppressConflict[<?=$i?>][suppressConflict]' value='1'>
+					</td>
+				<?php else: ?>
+					<td></td>
+				<?php endif ?>
+			</tr>
+			<tr style=' background-color: <?=$color?>; border-top:1px solid #DDD; '>
+				<td style=' padding-top:1px; padding-bottom:3px;'>
+					<?=$info[2]['type']?>
+				</td>
+				<td style=' padding-top:1px; padding-bottom:3px;'>
+					<?=logistics_getScheduleBlockName($conflict[2]['blockID'])?>
+				</td>
+				<td style=' padding-top:1px; padding-bottom:3px;'>
+					<?=min2hr($info[2]['startTime'], false,true)?> - <?=min2hr($info[2]['endTime'], false,true)?>
+				</td>
+				<td style=' padding-top:1px; padding-bottom:3px;'>
+					<?=$location[2]?>
+				</td>
+				<?php if($bothTournaments == false): ?>
+					<td></td>
+				<?php endif ?>
+			<tr>
+
+
+		<?php endforeach ?>
+	<?php endforeach ?>
+
+	</table>
+
+	<button class='button success' name='formName' value='suppressConflict'>Suppress Selected Conflicts </button>
+
+	</form>
+
+
+<?php
+}
+
+/******************************************************************************/
+
+function generateConflictList($eventRoster){
+
+	$conflictList = [];
+	foreach($eventRoster as $person){
+		$personalSchedule = logistics_getParticipantSchedule($person['rosterID'], $_SESSION['eventID']);
+
+		$dayNum = 0;
+		$lastSuppressConflicts = false;
+
+		if(isset($personalSchedule['scheduled']) == true){
+			foreach($personalSchedule['scheduled'] as $item){
+
+				if(($item['dayNum'] == $dayNum && $item['startTime'] < $lastEndTime)
+					&& ($lastSuppressConflicts == false && $item['suppressConflicts'] == 0)){
+					$conflict[1]['shiftID'] = $lastShift;
+				    $conflict[1]['roleID'] = $lastRoleID;
+					$conflict[1]['blockID'] = $lastBlock;
+					$conflict[1]['dayNum'] = $dayNum;
+					$conflict[1]['tournamentID'] = $lastTournamentID;
+					$conflict[2]['shiftID'] = @$item['shiftID']; // might not exist
+					$conflict[2]['roleID'] = @$item['logisticsRoleID']; // might not exist
+					$conflict[2]['blockID'] = $item['blockID'];
+					$conflict[2]['tournamentID'] = (int)@$item['tournamentID'];
+
+					$conflictList[$person['rosterID']][] = $conflict;
+
+				}
+				$lastSuppressConflicts = (bool)$item['suppressConflicts'];
+				$lastEndTime = $item['endTime'];
+				$dayNum = $item['dayNum'];
+				$lastTournamentID = (int)@$item['tournamentID'];
+				$lastBlock = $item['blockID'];
+				$lastShift = @$item['shiftID']; // Could also not exist
+				$lastRoleID = @$item['logisticsRoleID']; // Could also not exist
+
+
+			}
+		}
+	}
+
+	return $conflictList;
+}
+
+
+
+
+/******************************************************************************/
+
+// END OF DOCUMENT /////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
