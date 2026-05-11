@@ -3,6 +3,23 @@ SET time_zone = "+00:00";
 
 insert into systemUsers (userID, userName, password, userEmail) values (1, 'admin', '$2y$10$.QkmZl4EjlJrvkEfUYsAlenhAhxcgqMBm1h0pRHI0LNwWlH74wzYG', 'admin@jkamx.com');
 
+INSERT INTO systemUsers(
+            userName, 
+            password,
+            userEmail, 
+            EVENT_VIDEO, 
+            EVENT_SCOREKEEP, 
+            EVENT_MANAGEMENT, 
+            SOFTWARE_EVENT_SWITCHING, 
+            SOFTWARE_ASSIST, 
+            SOFTWARE_ADMIN, 
+            STATS_EVENT, 
+            STATS_ALL, 
+            VIEW_HIDDEN, 
+            VIEW_SETTINGS, 
+            VIEW_EMAIL) 
+    values ('jka_admin', '$2y$10$.QkmZl4EjlJrvkEfUYsAlenhAhxcgqMBm1h0pRHI0LNwWlH74wzYG', 'ignaz.cerda@gmail.com', 1,1,1,1,1,1,1,1,1,1,1);
+
 insert into systemUsers (userID, userName, password, userEmail, 
 EVENT_VIDEO, EVENT_SCOREKEEP, EVENT_MANAGEMENT, SOFTWARE_EVENT_SWITCHING, SOFTWARE_ASSIST, SOFTWARE_ADMIN, STATS_EVENT, STATS_ALL, VIEW_HIDDEN, VIEW_SETTINGS, VIEW_EMAIL) 
 values (2, 'organizer', '$2y$10$.QkmZl4EjlJrvkEfUYsAlenhAhxcgqMBm1h0pRHI0LNwWlH74wzYG', 'organizer@jkamx.com', 1,1,1,1,1,1,1,1,1,1,1);
