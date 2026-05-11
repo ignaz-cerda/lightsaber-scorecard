@@ -606,7 +606,7 @@ function menuAdmin(){
 			<li>
 				<a href='#'>Data Integrity</a>
 				<ul class='menu vertical'>
-					<li><a href='masterHemaRatings.php?t=0'>HEMA Ratings</a></li>
+					<li><a href='masterHemaRatings.php?t=0'>Ratings</a></li>
 					<li><a href='masterDuplicates.php?t=0'>Duplicate Names</a></li>
 				</ul>
 			</li>

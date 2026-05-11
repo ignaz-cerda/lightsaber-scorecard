@@ -99,7 +99,7 @@ include('includes/header.php');
 	<img style='width: 400px;' src="includes/images/logo_rect.jpg">
 	</div>
 	<div class='large-8 medium-7 cell align-self-middle'>
-	<p>HEMA Scorecard is a <b>FREE</b> online tournament management software for Historical European Martial Arts tournaments. If you are interested in using HEMA Scorecard to hold a tournament of your own, <a href='infoWhy.php'> why not have a look at some of it's best features</a>? </p>
+	<p>Lightsaber Scorecard is a <b>FREE</b> online tournament management software for Lightsaber tournaments. </p>
 </div></div>
 
 </div>
