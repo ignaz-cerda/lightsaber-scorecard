@@ -26,6 +26,7 @@ if(    ALLOW['EVENT_MANAGEMENT'] == true
 
 ?>
 
+
 <!doctype html>
 <html class="no-js" lang="en" dir="ltr">
 
@@ -40,12 +41,12 @@ if(    ALLOW['EVENT_MANAGEMENT'] == true
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="
-		HEMA Scorecard is a free online software application for running
-		Historical European Martial Arts tournaments and making the information
+		Lighsaber Scorecard is a free online software application for running
+		Lightsaber Sport tournaments and making the information
 		easily accessible.
 	">
-	<meta name="keywords" content="HEMA, Tournament, Historical European Martial Arts, Martial Arts, Sword">
-	<title>HEMA Scorecard</title>
+	<meta name="keywords" content="Lightsaber Sport Tournament">
+	<title>Lightsaber Scorecard</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css">
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.foundation.min.css">
 
@@ -57,10 +58,10 @@ if(    ALLOW['EVENT_MANAGEMENT'] == true
 	<script>google.charts.load('current', {'packages':['corechart']});</script>
 	<script src="https://cdn.tiny.cloud/1/ctrvec03t4hztqmygiaf7d6mtiod1qat9px92nlsxdq2mat3/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
-	<link rel='icon' href='includes\images\favicon.png'>
+	<link rel='icon' href='includes\images\favicon.png'>	
 
 	<!-- Jumps to section on page if $_SESSION['jumpTo'] is set -->
-	<?php if(isset($_SESSION['jumpTo'])): ?>
+	<?php if(isset($_SESSION['jumpTo'])): ?>		
 		<script>window.onload = window.location.hash='<?=$_SESSION['jumpTo']?>';</script>
 		<?php unset($_SESSION['jumpTo']); ?>
 	<?php endif ?>
@@ -87,8 +88,7 @@ if(    ALLOW['EVENT_MANAGEMENT'] == true
 
 <body>
  <!-- START Upper Navigation ------------------------------------------>
-
-	<?php debugging(); ?>
+	<?php debugging(); ?>	
 
 	<!-- Mobile Navigation -->
 	<div class="title-bar" data-responsive-toggle="tourney-animated-menu" data-hide-for="large" style='display:none'>
@@ -138,9 +138,8 @@ if(    ALLOW['EVENT_MANAGEMENT'] == true
 			<?php endif ?>
 		</div>
 
-	</div>
-
-	<?=DisplayServerVersion()?>
+	</div>	
+	<?=DisplayServerVersion()?>	
 
 <!-- END Upper Navigation ----------------------------------------->
 

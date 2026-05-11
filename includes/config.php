@@ -31,7 +31,7 @@
 	include(BASE_URL.'includes/database.php');
 
 	if(!defined('DEPLOYMENT')){
-		define('DEPLOYMENT' , DEPLOYMENT_UNKNOWN);
+		define('DEPLOYMENT' , DEPLOYMENT_LOCAL);
 	}
 
 // Program Related Constants
