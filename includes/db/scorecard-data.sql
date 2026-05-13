@@ -28,8 +28,8 @@ insert into systemUsers (userID, userName, password, userEmail,
 EVENT_VIDEO, EVENT_SCOREKEEP, EVENT_MANAGEMENT, SOFTWARE_EVENT_SWITCHING, SOFTWARE_ASSIST, SOFTWARE_ADMIN, STATS_EVENT, STATS_ALL, VIEW_HIDDEN, VIEW_SETTINGS, VIEW_EMAIL) 
 values (3, 'staff', '$2y$10$.QkmZl4EjlJrvkEfUYsAlenhAhxcgqMBm1h0pRHI0LNwWlH74wzYG', 'staff@jkamx.com', 1,1,1,1,1,1,1,1,1,1,1);
 
-insert into systemEvents (eventID, eventName, eventAbbreviation, eventYear, eventStartDate, eventEndDate)
-values (1, 'Nacional test1', 'TNSL', 2026, '2026-05-16', '2026-05-17');
+insert into systemEvents (eventID, eventName, eventAbbreviation, eventYear, eventStartDate, eventEndDate, countryIso2)
+values (2, 'Nacional test2', 'TNSL3', 2026, '2026-05-16', '2026-05-17', 'MX');
 
 -- --------------------------------------------------------
 

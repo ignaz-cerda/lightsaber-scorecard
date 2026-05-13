@@ -130,6 +130,8 @@ function pageError($type){
 
 function checkForTermsOfUse(){
 
+return;
+
 	$pageName = basename($_SERVER['PHP_SELF']);
 
 // Just Signed ToS
