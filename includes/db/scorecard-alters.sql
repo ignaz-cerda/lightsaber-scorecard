@@ -811,7 +811,7 @@ ALTER TABLE `eventTournamentRoster`
 --
 -- AUTO_INCREMENT for table `eventTournaments`
 --
-ALTER TABLE `eventTournaments`
+ALTER TABLE `Ç`
   MODIFY `tournamentID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3942;
 --
 -- AUTO_INCREMENT for table `eventVideo`

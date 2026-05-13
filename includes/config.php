@@ -23,6 +23,7 @@
 	define("DEPLOYMENT_PRODUCTION",1);
 	define("DEPLOYMENT_TEST",2);
 	define("DEPLOYMENT_LOCAL",3);
+	define('DEPLOYMENT' , DEPLOYMENT_PRODUCTION);
 
 // Database Connection
 	if(!defined('BASE_URL')){
@@ -31,7 +32,7 @@
 	include(BASE_URL.'includes/database.php');
 
 	if(!defined('DEPLOYMENT')){
-		define('DEPLOYMENT' , DEPLOYMENT_TEST);
+		define('DEPLOYMENT' , DEPLOYMENT_UNKNOWN);
 	}
 
 // Program Related Constants
