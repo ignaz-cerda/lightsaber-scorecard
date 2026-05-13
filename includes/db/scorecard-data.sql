@@ -1450,3 +1450,14 @@ INSERT INTO `systemLogisticsRoles` (`logisticsRoleID`, `roleName`, `roleSortImpo
 (12, 'Referee', 28);
 
 -- --------------------------------------------------------
+
+INSERT INTO `systemTournaments` (`tournamentTypeID`, `tournamentTypeMeta`, `tournamentType`, `Pool_Bracket`, `Pool_Sets`, `Scored_Event`, `numberOfInstances`, `description`, `functionName`) VALUES
+(163, 'weapon', 'Lightsaber', 1, 1, 1, 1, NULL, NULL),
+(164, 'prefix', 'Avanzado', 1, 1, 1, 0, NULL, NULL),
+(165, 'prefix', 'Basico', 1, 1, 1, 0, NULL, NULL),
+(166, 'gender', 'Mixto', 1, 1, 1, 0, NULL, NULL),
+(167, 'gender', 'Femenil', 1, 1, 1, 0, NULL, NULL),
+(168, 'gender', 'LGBT+', 1, 1, 1, 0, NULL, NULL),
+(169, 'material', 'Policarbonato', 1, 1, 1, 0, NULL, NULL),
+(170, 'prefix', 'Rogue', 1, 1, 1, 0, NULL, NULL),
+(171, 'prefix', 'Exoticas', 1, 1, 1, 0, NULL, NULL);
