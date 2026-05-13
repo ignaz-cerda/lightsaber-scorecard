@@ -1,25 +1,25 @@
 services:
   web:
-    image: "php:7.4-cli"
+    image: php:7.4-apache
+
     ports:
-      - "8000:8000"
+      - "8000:80"
 
     volumes:
-      - .:/hemaScorecard
+      - .:/var/www/html
+
+    working_dir: /var/www/html
 
     command: >
-      sh -c "docker-php-ext-install mysqli &&
-             docker-php-ext-enable mysqli &&
-             pecl install xdebug-3.1.5 ||
-             docker-php-ext-enable xdebug &&
-             php -S 0.0.0.0:8000 -t /hemaScorecard"
+      bash -c "
+        docker-php-ext-install mysqli &&
+        apache2-foreground
+      "
 
-    environment:
-      XDEBUG_CONFIG: remote_host=host.docker.internal remote_port=9000 remote_enable=1
-    links:
-      - db
+    restart: unless-stopped
+
   db:
-    image: "mysql:5.7.33"
+    image: mysql:5.7.33
 
     environment:
       MYSQL_DATABASE: ScorecardV5
@@ -30,3 +30,5 @@ services:
     volumes:
       - ./includes:/docker-entrypoint-initdb.d
       - ./data:/var/lib/mysql
+
+    restart: unless-stopped
