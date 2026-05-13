@@ -95,8 +95,8 @@ include('includes/header.php');
 <div class='cell ' style='border-bottom:2px solid black'>
 	<div class='grid-x grid-margin-x'>
 
-	<div class='large-4 medium-5 cell align-self-middle'>
-	<!-- <img style='width: 400px;' src="includes/images/logo_rect.jpg"> -->
+	<div class='large-4 medium-5 cell align-self-middle'>	
+	<img style='width: 400px;' src="includes/images/lightsaber_logo_rect.png">
 	</div>
 	<div class='large-8 medium-7 cell align-self-middle'>
 	<p>Lightsaber Scorecard is a <b>FREE</b> online tournament management software for Lightsaber tournaments. </p>
