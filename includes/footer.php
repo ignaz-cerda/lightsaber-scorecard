@@ -25,7 +25,7 @@
 				<div class='grid-x grid-margin-x align-right'>
 					<div class='shrink cell'>
 						<a href='index.php'>Lightsaber Scorecard</a><BR>
-						Developed by <a href='http://www.seanfranklin.ca/talenttree'>Sean Franklin</a>,&nbsp;
+						Developed by <a href='https://github.com/SeanFranklin/hemaScorecard#' target="_blank">Sean Franklin</a>,&nbsp;
 						Powered by Drachen Byte Software
 					</div>					
 				</div>
