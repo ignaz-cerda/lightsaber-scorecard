@@ -437,7 +437,11 @@ INSERT INTO `systemFormats` (`formatID`, `formatName`) VALUES
 (1, 'Results Only'),
 (2, 'Sparring Matches'),
 (3, 'Solo Scored'),
-(4, 'Composite Event');
+(4, 'Composite Event'),
+(5, 'Lightsaber Sparring Matches');
+
+INSERT INTO `systemFormats` (`formatID`, `formatName`) VALUES
+(5, 'Lightsaber Sparring Matches');
 
 -- --------------------------------------------------------
 
@@ -732,8 +736,10 @@ INSERT INTO `systemRankings` (`tournamentRankingID`, `name`, `formatID`, `number
 (95, 'Match Points | Plus/Minus', 2, 2, '== Ranking ====\r\n1st Criteria: Match Points\r\n1st Tiebreaker: Points +/-\r\n\r\n== Match Points ====\r\nWin = 9 points\r\nTie = 6 points\r\nLoss = 3 points\r\n\r\n', NULL, NULL, '((9 * wins) + (6 * ties) + (3 * losses))', 'score', 'DESC', '(pointsFor - pointsAgainst)', 'DESC', NULL, NULL, NULL, NULL, 'Wins', 'wins', 'Ties', 'ties', 'Points For', 'pointsFor', 'Points Against', 'pointsAgainst', 'Points +/-', '(pointsFor - pointsAgainst)'),
 (96, 'TF_v1', 2, 3, '== Ranking ========\r\nIndicator Score\r\n\r\n1st Tiebreaker: Most Wins\r\n2nd Tiebreaker: Least Doubles\r\n\r\n== Indicator Score ======\r\n[Target Point + 3 * Wins]/[Total Times Hit + Double Hit Penalty ]\r\n\r\nDouble Hit Penalty = ((n-1)*n)/3', NULL, NULL, 'case \r\n when (hitsAgainst + afterblowsAgainst + doubles) > 0 then\r\n ((AbsPointsFor + (3 * Wins)) / (hitsAgainst + afterblowsAgainst + (((doubles-1)*doubles)/3)))\r\n else\r\n (AbsPointsFor + (3 * Wins))\r\nend', 'score', 'DESC', 'wins', 'DESC', 'doubles', 'ASC', NULL, NULL, 'Wins', 'wins', 'Points For', 'AbsPointsFor', 'Hit Against', '(hitsAgainst + afterblowsAgainst)', 'Doubles', 'doubles', 'Score', 'score'),
 (97, 'Toulouse', 2, 4, '== Ranking ========\r\nIndicator Score\r\n\r\n== Indicator Score ======\r\n+ 1 * Wins\r\n- 2 * Defeats\r\n- 3 * Doubles', NULL, NULL, 'wins - (2 * AbsPointsAgainst) - (3 * doubleOuts) ', 'score', 'DESC', NULL, NULL, NULL, NULL, NULL, NULL, 'Wins', 'wins', 'Defeats', 'AbsPointsAgainst', 'Doubles', 'doubleOuts', 'Ties', 'matches - wins - AbsPointsAgainst - doubleOuts', 'Score', 'score'),
-(98, 'Terca Score v2', 2, 1, '__ Ranking ________\r\nMatch Points\r\n(3 * Wins) + (2 * Ties) + (1 * Losses)\r\n\r\n__ Tie Breakers _______\r\n1st: Doubles [Lowest]\r\n2nd: Points Against [Lowest]\r\n3rd: Points For [Highest]\r\n4th: Points +/- [Highest]\r\n\r\n\r\n\r\n', NULL, NULL, '(3 * wins) + (2 * ties) + (1 * losses)', 'score', 'DESC', 'doubles', 'ASC', '((1000 * pointsAgainst) - pointsFor)', 'ASC', '(pointsFor - pointsAgainst)', 'DESC', 'Match Points', 'score', 'Doubles', 'doubles', 'Points For', 'pointsFor', 'Points Against', 'pointsAgainst', NULL, NULL);
-
+(98, 'Terca Score v2', 2, 1, '__ Ranking ________\r\nMatch Points\r\n(3 * Wins) + (2 * Ties) + (1 * Losses)\r\n\r\n__ Tie Breakers _______\r\n1st: Doubles [Lowest]\r\n2nd: Points Against [Lowest]\r\n3rd: Points For [Highest]\r\n4th: Points +/- [Highest]\r\n\r\n\r\n\r\n', NULL, NULL, '(3 * wins) + (2 * ties) + (1 * losses)', 'score', 'DESC', 'doubles', 'ASC', '((1000 * pointsAgainst) - pointsFor)', 'ASC', '(pointsFor - pointsAgainst)', 'DESC', 'Match Points', 'score', 'Doubles', 'doubles', 'Points For', 'pointsFor', 'Points Against', 'pointsAgainst', NULL, NULL),
+(99, 'Wins and Points', 5, 273, '== Ranking ====\r\nWins\r\n1st Tiebreaker: Points For\r\n2nd Tiebreaker: Points Against\r\n3rd Tiebreaker: Doubles', NULL, NULL, '0', 'wins', 'DESC', 'pointsFor', 'DESC', 'pointsAgainst', 'ASC', 'doubles', 'ASC', 'Wins', 'wins', 'Points For', 'pointsFor', 'Points Against', 'pointsAgainst', 'Doubles', 'doubles', NULL, NULL),
+(100, 'Wins | Plus/Minus', 5, 794, '== Ranking ====\nWins\n1st Tiebreaker: Indicator Score\n\n== Indicator Score ====\npointsFor - pointsAgainst\n\n', NULL, NULL, 'pointsFor - pointsAgainst', 'wins', 'DESC', 'score', 'DESC', NULL, NULL, NULL, NULL, 'Wins', 'wins', 'Points For', 'pointsFor', 'Points Against', 'pointsAgainst', 'Points +/-', 'score', NULL, NULL),
+(101, 'Plus/Minus | Wins', 5, 82, '== Ranking ====\r\nIndicator Score\r\n1st Tiebreaker: Wins\r\n\r\n== Indicator Score ====\r\npointsFor - pointsAgainst\r\n\r\n', NULL, NULL, 'pointsFor - pointsAgainst', 'score', 'DESC', 'wins', 'DESC', 'doubles', 'ASC', NULL, NULL, 'Wins', 'wins', 'Points For', 'pointsFor', 'Points Against', 'pointsAgainst', 'Points +/-', 'score', 'Doubles', 'doubles');
 -- --------------------------------------------------------
 
 INSERT INTO `systemUpdates` (`updateID`, `updateYear`, `updateText`) VALUES

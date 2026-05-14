@@ -93,6 +93,7 @@
 	define("FORMAT_MATCH",2);
 	define("FORMAT_SOLO",3);
 	define("FORMAT_META",4);
+	define("FORMAT_LIGHTSABER",5);
 
 	define("NO_AFTERBLOW",1);
 	define("DEDUCTIVE_AFTERBLOW",2);
