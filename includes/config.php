@@ -23,7 +23,7 @@
 	define("DEPLOYMENT_PRODUCTION",1);
 	define("DEPLOYMENT_TEST",2);
 	define("DEPLOYMENT_LOCAL",3);
-	define('DEPLOYMENT' , DEPLOYMENT_PRODUCTION);
+	define('DEPLOYMENT' , DEPLOYMENT_TEST);
 
 // Database Connection
 	if(!defined('BASE_URL')){
